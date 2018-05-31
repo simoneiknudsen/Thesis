@@ -23,6 +23,13 @@ void createInput(vector<float> &input, int n, float k){
 	}
 }
 
+void printInput(vector<float> input){
+	for(int i = 0; i < input.size(); i++){
+		cout << input[i] << ", ";
+	}
+	cout << endl;
+}
+
 //Print alle clusters
 void printClusters(vector<vector<float>> V){
 	for(int i = 0; i < V.size(); i++){
@@ -525,7 +532,8 @@ void updateCount(vector<float> &input, vector<pair<int,int>> &indexCounts){
 	});
 }
 
-int floatingUnitGreedy(vector<float> input, vector<vector<float>> &V, float &length){
+int floatingUnitGreedy(vector<float> input, float &length){
+	vector<vector<float>> V;
 	vector<pair<int,int>> indexCounts; //index it starts, followed by freq
 	int count = 0;
 
