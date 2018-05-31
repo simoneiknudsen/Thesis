@@ -47,7 +47,7 @@ float dist(float p, float endpoint){
 	return abs(dist);
 }
 
-int onlineBenefitGreedy(vector<float> input, float &length){
+int onlineBenefitGreedy(vector<float> input, float length){
 	//Vector af vector; inderste vector er en cluster, og yderste vector indeholder alle cluster vectors
 	vector<vector<float>> V;
 	vector<float> v;
@@ -101,7 +101,7 @@ int onlineBenefitGreedy(vector<float> input, float &length){
 	return V.size();
 }
 
-int onlineCount(vector<float> input, float &length){
+int onlineCount(vector<float> input, float length){
 	//Vector af vector; inderste vector er en cluster, og yderste vector indeholder alle cluster vectors
 	vector<vector<float>> V;
 	vector<float> v;
@@ -141,13 +141,13 @@ int onlineCount(vector<float> input, float &length){
 			v.clear();
 		}
 	}
-	//cout << "length: " << length << endl;
+	cout << "Printing solution: " << endl;
 	printClusters(V);
 	return V.size();
 }
 
 //Normal OPT
-int leftUnit(vector<float> input, float &length){
+int leftUnit(vector<float> input, float length){
 	//Vector af vector; inderste vector er en cluster, og yderste vector indeholder alle cluster vectors
 	vector<vector<float>> V;
 	vector<float> v;
@@ -184,12 +184,12 @@ int leftUnit(vector<float> input, float &length){
 			}
 		}
 	}
-	//cout << "length: " << length << endl;
+	cout << "Printing solution: " << endl;
 	printClusters(V);
 	return V.size(); 
 }
 
-int discretizedUnitGreedy(vector<float> input, float k, float &length){
+int discretizedUnitGreedy(vector<float> input, float k, float length){
 	//Vector af vector; inderste vector er en cluster, og yderste vector indeholder alle cluster vectors
     vector<int> M;
     for(int i = 0.0; i < k; i++){
@@ -205,11 +205,6 @@ int discretizedUnitGreedy(vector<float> input, float k, float &length){
 	stable_sort(input.begin(),input.end(),[&M](auto &left, auto &right) {
     	return M[floor(left)] > M[floor(right)];
 	});
-	
-	for(int i = 0; i < input.size(); i++){
-		cout << input[i] << ", ";
-	}
-	cout << endl;
 	
 	auto res = leftUnit(input,length);
 
@@ -245,7 +240,7 @@ void updateRatios(vector<float> input, vector<pair<int, float>> &foo){
 	}
 }
 
-int benefitGreedy(vector<float> input, float k, float &length){
+int benefitGreedy(vector<float> input, float k, float length){
 	vector<vector<float>> V;
 	/* Vector of pairs, indexed by the index in input
 	Pair is made up of an index and a ratio */
@@ -407,7 +402,7 @@ int benefitGreedy(vector<float> input, float k, float &length){
 	return V.size();
 }
 
-int minDistGreedy(vector<float> input, float &length){
+int minDistGreedy(vector<float> input, float length){
 	vector<vector<float>> V;
 	vector<float> v;
 	vector<tuple<float,int,int>> M;
@@ -532,7 +527,7 @@ void updateCount(vector<float> &input, vector<pair<int,int>> &indexCounts){
 	});
 }
 
-int floatingUnitGreedy(vector<float> input, float &length){
+int floatingUnitGreedy(vector<float> input, float length){
 	vector<vector<float>> V;
 	vector<pair<int,int>> indexCounts; //index it starts, followed by freq
 	int count = 0;
@@ -595,6 +590,7 @@ int floatingUnitGreedy(vector<float> input, float &length){
 			input.erase(input.begin(),input.end());
 		}
 	}
+	cout << "Printing solution: " << endl;
 	printClusters(V);
 	return V.size();
 }
