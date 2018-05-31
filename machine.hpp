@@ -20,9 +20,25 @@ void printSchedule(vector<vector<pair<double,double>>> M){
 			cout << "(" << M[i][j].first << ", " << M[i][j].second << ")";
 		}
 		cout << endl;
+	}
 }
 
 // Stuff for Resource Constraint 
+
+pair<double,double> sum(vector<pair<double,double>> v){
+	double p = 0;
+	double r = 0;
+	if(v.size() == 0){
+		p = 0;
+		r = 0;
+	} else {
+		for(int i = 0; i < v.size(); i++){
+			p += v[i].first;
+			r += v[i].second;
+		}
+	}
+	return make_pair(p,r);
+}
 
 void makeCuts(double m, vector<vector<pair<double,double>>> &M){
 	int q = (m/4)-1;
@@ -90,7 +106,8 @@ pair<double,double> listScheduling(vector<pair<double,double>> input, double m){
 		alg = max(sum(M[i]).first,alg);
 		alg1 += M[i].size();
 	}
-
+	cout << "Printing solution: " << endl;
+	printSchedule(M);
 	return make_pair(alg,alg1);
 }
 
@@ -138,7 +155,8 @@ pair<double,int> firstFitLS(vector<pair<double,double>> input, double m){
 		alg = max(sum(M[i]).first,alg);
 		alg1 += M[i].size();
 	}
-
+	cout << "Printing solution: " << endl;
+	printSchedule(M);
 	return make_pair(alg,alg1);
 }
 
@@ -191,7 +209,8 @@ pair<double,int> bestFitLS(vector<pair<double,double>> input, double m){
 		alg = max(sum(M[i]).first,alg);
 		alg1 += M[i].size();
 	}
-
+	cout << "Printing solution: " << endl;
+	printSchedule(M);
 	return make_pair(alg,alg1);
 }
 
@@ -244,7 +263,8 @@ pair<double,int> nonemptyWorstFitLS(vector<pair<double,double>> input, double m)
 		alg = max(sum(M[i]).first,alg);
 		alg1 += M[i].size();
 	}
-
+	cout << "Printing solution: " << endl;
+	printSchedule(M);
 	return make_pair(alg,alg1);
 }
 
@@ -261,7 +281,7 @@ pair<double,double> optimalRes(vector<pair<double,double>> input, double m){
 
 //Stuff for Cache Resource
 
-void makeCutsCache(double m, vector<vector<pair<double,double>>> &M, vector<pair<double,double>> &input){
+void makeCutsCache(double m, vector<vector<pair<double,double>>> &M){
 	int q = (m/4)-1;
 	double C = 100.0;
 	vector<pair<double,double>> V;
@@ -508,10 +528,22 @@ double listSchedulingCache(vector<pair<double,double>> input, double m){
 		}
 		placed = false;
 	}
-	int alg1 = 0;
 	for(int i = 0; i < M.size(); i++){
 		alg = max(sum(M[i]).first,alg);
 	}
-	
+	cout << "Printing solution: " << endl;
+	printSchedule(M);
 	return alg;
 }
+
+double optimalCache(vector<pair<double,double>> input, double m){
+	sort(input.begin(), input.end(),[](const std::pair<double,double>& a, const std::pair<double,double>& b) {
+  		return get<0>(a) < get<0>(b);
+  	});
+
+  	double alg = listSchedulingCache(input,m);
+
+  	return alg;
+}
+
+#endif //MACHINE_HPP
