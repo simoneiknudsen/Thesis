@@ -234,11 +234,11 @@ int bestFit(std::vector<std::pair<int,int>> perm, std::vector<std::vector<std::p
 
 	for(int i = 0; i < alg.size(); i++){
 		//For Unit Price Problem
-		//result += alg[i].size();
+		result += alg[i].size();
 		//For Proportional Price Problem
-		for(int j = 0; j < alg[i].size(); j++){
+		/*for(int j = 0; j < alg[i].size(); j++){
 			result += alg[i][j].second-alg[i][j].first;
-		}
+		}*/
 	}
 	return result;
 }
@@ -317,11 +317,11 @@ int worstFit(std::vector<std::pair<int,int>> perm, std::vector<std::vector<std::
 
 	for(int i = 0; i < alg.size(); i++){
 		//For Unit Price Problem
-		//result += alg[i].size();
+		result += alg[i].size();
 		//For Proportional Price Problem
-		for(int j = 0; j < alg[i].size(); j++){
+		/*for(int j = 0; j < alg[i].size(); j++){
 			result += alg[i][j].second-alg[i][j].first;
-		}
+		}*/
 	}
 	return result;
 }
@@ -377,12 +377,148 @@ int firstFit(std::vector<std::pair<int,int>> perm, std::vector<std::vector<std::
 	
 	for(int i = 0; i < alg.size(); i++){
 		//For Unit Price Problem
-		//result += alg[i].size();
+		result += alg[i].size();
 		//For Proportional Price Problem
-		for(int j = 0; j < alg[i].size(); j++){
+		/*for(int j = 0; j < alg[i].size(); j++){
 			result += alg[i][j].second-alg[i][j].first;
-		}
+		}*/
 	}
 	return result;
+}
+
+int intervalLengthBestFit(std::vector<std::pair<int,int>> permutation, int m, int k){
+	std::vector<std::vector<std::pair<int,int>>> result;
+	int alg = 0;
+	sort(permutation.begin(), permutation.end(), [](const std::pair<int,int>& a, const std::pair<int,int>& b) {
+  		return get<0>(a) < get<0>(b);
+  	});
+
+  	stable_sort(permutation.begin(), permutation.end(), [](const std::pair<int,int>& a, const std::pair<int,int>& b) {
+  		return get<1>(a)-get<0>(a) > get<1>(b)-get<0>(b);
+  	});
+
+	int l = 0;	//first car == even
+	int j = (m/2);	//second car == odd
+
+	int q = 0;
+	while(permutation[q].first == 1 && permutation[q].second == 8){
+		if(q % 2 == 0){		//even
+			result[l].push_back(permutation[q]);
+			l++;
+		} else {			//odd
+			result[j].push_back(permutation[q]);
+			j++;
+		}
+		q++;
+	}
+
+	permutation.erase(permutation.begin(),permutation.begin()+q);
+
+	bestFit(permutation,result,m,k);
+	for(int i = 0; i < result.size(); i++){
+		alg += result[i].size();
+	}
+	/*for(int i = 0; i < result.size(); i++){
+		for(int j = 0; j < result[i].size(); j++){
+			alg += result[i][j].second-result[i][j].first;
+		}
+	}*/
+
+	return alg;
+}
+
+int intervalFreqBestFit(std::vector<std::pair<int,int>> permutation, int m, int k){
+	std::vector<std::vector<std::pair<int,int>>> result;
+	int alg = 0;
+	int M[k+1][k+1];
+	for(int i = 0; i <= k; i++){
+		for(int j = 0; j <= k; j++){
+			M[i][j] = 0;
+		}
+	}
+	for(int i = 0; i < permutation.size(); i++){
+		M[permutation[i].first][permutation[i].second]++;
+	}
+
+	sort(permutation.begin(), permutation.end());
+
+	stable_sort(permutation.begin(), permutation.end(), [&M](const std::pair<int,int>& a, const std::pair<int,int>& b) {
+  		return M[a.first][a.second] > M[b.first][b.second];
+  	});
+
+  	bestFit(permutation,result,m,k);
+	for(int i = 0; i < result.size(); i++){
+		alg += result[i].size();
+	}
+	/*for(int i = 0; i < result.size(); i++){
+		for(int j = 0; j < result[i].size(); j++){
+			alg += result[i][j].second-result[i][j].first;
+		}
+	}*/
+
+	return alg;
+}
+
+int biggest(int a, int b){
+	if(a > b){
+		return a;
+	} else {
+		return b;
+	}
+}
+
+int stationFreqBestFit(std::vector<std::pair<int,int>> permutation, int m, int k){
+	std::vector<std::vector<std::pair<int,int>>> result;
+	int alg = 0;
+	int M[k+1];
+	for(int i = 0; i <= k; i++){
+		M[i] = 0;
+	}
+	for(int i = 0; i < permutation.size(); i++){
+		M[permutation[i].first]++;
+		M[permutation[i].second]++;
+	}
+
+	/*sort(permutation.begin(), permutation.end(), [](const std::pair<int,int>& a, const std::pair<int,int>& b) {
+  		return get<0>(a) < get<0>(b);
+  	});*/
+
+	stable_sort(permutation.begin(), permutation.end(), [&M](const std::pair<int,int>& a, const std::pair<int,int>& b) {
+  		return biggest(M[a.first],M[a.second]) > biggest(M[b.first],M[b.second]);
+  	});
+
+  	bestFit(permutation,result,m,k);
+	for(int i = 0; i < result.size(); i++){
+		alg += result[i].size();
+	}
+	/*for(int i = 0; i < result.size(); i++){
+		for(int j = 0; j < result[i].size(); j++){
+			alg += result[i][j].second-result[i][j].first;
+		}
+	}*/
+
+	return alg;
+}
+
+int startstationBestFit(std::vector<std::pair<int,int>> permutation, int m, int k){
+	std::vector<std::vector<std::pair<int,int>>> result;
+	int alg = 0;
+	sort(permutation.begin(), permutation.end(), [](const std::pair<int,int>& a, const std::pair<int,int>& b) {
+  		return get<0>(a) < get<0>(b);
+  	});
+
+  	bestFit(permutation,result,m,k);
+	for(int i = 0; i < result.size(); i++){
+		alg += result[i].size();
+	}
+	// For the Proportional Price Problem
+	/*for(int i = 0; i < result.size(); i++){
+		for(int j = 0; j < result[i].size(); j++){
+			alg += result[i][j].second-result[i][j].first;
+		}
+	}
+	*/
+
+	return alg;
 }
 
