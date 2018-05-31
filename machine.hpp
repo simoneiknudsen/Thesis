@@ -250,7 +250,7 @@ pair<double,int> nonemptyWorstFitLS(vector<pair<double,double>> input, double m)
 
 pair<double,double> optimalRes(vector<pair<double,double>> input, double m){
 	sort(input.begin(), input.end(),[](const std::pair<double,double>& a, const std::pair<double,double>& b) {
-  		return get<0>(a) > get<0>(b);
+  		return get<0>(a) < get<0>(b);
   	});
 
   	auto alg = listScheduling(input,m);
