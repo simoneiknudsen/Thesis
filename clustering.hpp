@@ -561,7 +561,7 @@ int floatingUnitGreedy(vector<float> input, vector<vector<float>> &V, float &len
 			if(!input.empty()){
 				updateCount(input,indexCounts);
 			}
-		} else if(indexCounts[i].second != 0 && input[indexCounts[i].first+indexCounts[i].second]-input[indexCounts[i].first] <= 1 && input[indexCounts[i].first+1]-input[indexCounts[i].first] <= length)){
+		} else if(indexCounts[i].second != 0 && input[indexCounts[i].first+indexCounts[i].second]-input[indexCounts[i].first] <= 1 && input[indexCounts[i].first+1]-input[indexCounts[i].first] <= length){
 			int c = 0; 
 			for(int j = indexCounts[i].first; j <= (indexCounts[i].first+indexCounts[i].second); j++){	
 				if(length >= 0 && input[j]-input[indexCounts[i].first] <= length){
