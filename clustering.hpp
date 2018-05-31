@@ -1,5 +1,5 @@
-#ifndef CLUSTER_HPP
-#define CLUSTER_HPP
+#ifndef CLUSTERING_HPP
+#define CLUSTERING_HPP
 
 #include <vector>
 #include <ostream>
@@ -506,3 +506,89 @@ int minDistGreedy(vector<float> input, float &length){
   	printClusters(V);
 	return V.size();
 }
+
+void updateCount(vector<float> &input, vector<pair<int,int>> &indexCounts){
+	int count = 0;
+	indexCounts.clear();
+	for(int i = 0; i < input.size(); i++){
+		for(int j = i + 1; j < input.size(); j++){
+			if(input[j]-input[i] <= 1){
+				count++;
+			}
+		}
+		indexCounts.push_back(make_pair(i,count));
+		count = 0;
+	}
+
+	sort(indexCounts.begin(), indexCounts.end(), [](auto &left, auto &right) {
+    	return left.second > right.second;
+	});
+}
+
+int floatingUnitGreedy(vector<float> input, vector<vector<float>> &V, float &length){
+	vector<pair<int,int>> indexCounts; //index it starts, followed by freq
+	int count = 0;
+
+	sort(input.begin(),input.end());
+
+	for(int i = 0; i < input.size(); i++){
+		for(int j = i+1; j < input.size(); j++){
+			if(input[j]-input[i] <= 1){
+				count++;
+			}
+		}
+		indexCounts.push_back(make_pair(i,count));
+		count = 0;
+	}
+
+	sort(indexCounts.begin(), indexCounts.end(), [](auto &left, auto &right) {
+    		return left.second > right.second;
+	});
+	
+	vector<float> v;
+	
+	while(input.size() > 0){
+		int i = 0;
+		
+		if(indexCounts[i].second != 0 && input[indexCounts[i].first+indexCounts[i].second]-input[indexCounts[i].first] <= 1 && (length-(input[indexCounts[i].first+indexCounts[i].second]-input[indexCounts[i].first])) >= 0){
+			for(int j = indexCounts[i].first; j <= (indexCounts[i].first+indexCounts[i].second); j++){
+				v.push_back(input[j]);
+			}
+			V.push_back(v);
+			length -= v[v.size()-1]-v[0];
+			v.clear();
+			input.erase(input.begin()+indexCounts[i].first, input.begin()+(indexCounts[i].first+indexCounts[i].second+1));
+			if(!input.empty()){
+				updateCount(input,indexCounts);
+			}
+		} else if(indexCounts[i].second != 0 && input[indexCounts[i].first+indexCounts[i].second]-input[indexCounts[i].first] <= 1 && input[indexCounts[i].first+1]-input[indexCounts[i].first] <= length)){
+			int c = 0; 
+			for(int j = indexCounts[i].first; j <= (indexCounts[i].first+indexCounts[i].second); j++){	
+				if(length >= 0 && input[j]-input[indexCounts[i].first] <= length){
+					v.push_back(input[j]);
+					c++;
+				}
+			}
+			V.push_back(v);
+			length -= v[v.size()-1]-v[0];
+			v.clear();
+			
+			input.erase(input.begin()+indexCounts[i].first, input.begin()+(indexCounts[i].first+c));
+			
+			if(!input.empty()){
+				updateCount(input,indexCounts);
+			}
+		} else {
+			for(int k = 0; k < input.size(); k++){
+				v.push_back(input[k]);
+				V.push_back(v);
+				v.clear();
+			}
+			input.erase(input.begin(),input.end());
+		}
+	}
+	printClusters(V);
+	return V.size();
+}
+
+#endif // CLUSTERING_HPP
