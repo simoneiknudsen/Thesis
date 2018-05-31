@@ -18,6 +18,13 @@ void printReservation(std::vector<std::vector<std::pair<int,int>>> &seatRes){
 	}
 }
 
+void printInput(vector<pair<int,int>> input){
+	for(int i = 0; i < input.size(); i++){
+		cout << "(" << input[i].first << "," << input[i].second << ")";	
+	}
+	cout << endl;
+}
+
 std::vector<int> makeQs(std::vector<int> &q, int p, int m){
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -387,7 +394,7 @@ int firstFit(std::vector<std::pair<int,int>> perm, std::vector<std::vector<std::
 }
 
 int intervalLengthBestFit(std::vector<std::pair<int,int>> permutation, int m, int k){
-	std::vector<std::vector<std::pair<int,int>>> result;
+	std::vector<std::vector<std::pair<int,int>>> result(m,vector<pair<int,int>>());
 	int alg = 0;
 	sort(permutation.begin(), permutation.end(), [](const std::pair<int,int>& a, const std::pair<int,int>& b) {
   		return get<0>(a) < get<0>(b);
@@ -423,12 +430,14 @@ int intervalLengthBestFit(std::vector<std::pair<int,int>> permutation, int m, in
 			alg += result[i][j].second-result[i][j].first;
 		}
 	}*/
-
+	cout << "Printing reservation: " << endl;
+	printReservation(result);
+	//cout << alg << endl;
 	return alg;
 }
 
 int intervalFreqBestFit(std::vector<std::pair<int,int>> permutation, int m, int k){
-	std::vector<std::vector<std::pair<int,int>>> result;
+	std::vector<std::vector<std::pair<int,int>>> result(m,vector<pair<int,int>>());
 	int alg = 0;
 	int M[k+1][k+1];
 	for(int i = 0; i <= k; i++){
@@ -455,7 +464,9 @@ int intervalFreqBestFit(std::vector<std::pair<int,int>> permutation, int m, int 
 			alg += result[i][j].second-result[i][j].first;
 		}
 	}*/
-
+	cout << "Printing reservation: " << endl;
+	printReservation(result);
+	//cout << alg << endl;
 	return alg;
 }
 
@@ -468,7 +479,7 @@ int biggest(int a, int b){
 }
 
 int stationFreqBestFit(std::vector<std::pair<int,int>> permutation, int m, int k){
-	std::vector<std::vector<std::pair<int,int>>> result;
+	std::vector<std::vector<std::pair<int,int>>> result(m,vector<pair<int,int>>());
 	int alg = 0;
 	int M[k+1];
 	for(int i = 0; i <= k; i++){
@@ -496,12 +507,14 @@ int stationFreqBestFit(std::vector<std::pair<int,int>> permutation, int m, int k
 			alg += result[i][j].second-result[i][j].first;
 		}
 	}*/
-
+	cout << "Printing reservation: " << endl;
+	printReservation(result);
+	//cout << alg << endl;
 	return alg;
 }
 
 int startstationBestFit(std::vector<std::pair<int,int>> permutation, int m, int k){
-	std::vector<std::vector<std::pair<int,int>>> result;
+	std::vector<std::vector<std::pair<int,int>>> result(m,vector<pair<int,int>>());
 	int alg = 0;
 	sort(permutation.begin(), permutation.end(), [](const std::pair<int,int>& a, const std::pair<int,int>& b) {
   		return get<0>(a) < get<0>(b);
@@ -518,7 +531,8 @@ int startstationBestFit(std::vector<std::pair<int,int>> permutation, int m, int 
 		}
 	}
 	*/
-
+	cout << "Printing reservation: " << endl;
+	printReservation(result);
+	//cout << alg << endl;
 	return alg;
 }
-
